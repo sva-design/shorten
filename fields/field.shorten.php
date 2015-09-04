@@ -168,6 +168,8 @@
 		public function displayPublishPanel(XMLElement $wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null)
 		{
 			if ($this->get('hide') == 'yes' || !$entry_id) return;
+			
+			$fieldname = 'fields'.$fieldnamePrefix.'['.$this->get('element_name').']'.$fieldnamePostfix;
 
 			$value = isset($data['value']) ? $data['value'] : $this->encode($entry_id);
 
@@ -175,7 +177,8 @@
 			$span  = new XMLElement('span', null, array('class' => 'frame'));
 			$short = new XMLElement('div',
 				__('This entry has been shortened to').
-					' <strong>'. $value. '</strong>'
+					' <strong>'. $value. '</strong>'.
+					' <input type="hidden" name="'. $fieldname .'" value="'. $value. '">'
 				);
 
 			$span->appendChild($short);
@@ -210,7 +213,7 @@
 			if (!$entry_id) return array();
 
 			return array(
-				'value' => $this->encode($entry_id)
+				'value' => $data ?: $this->encode($entry_id)
 			);
 		}
 
